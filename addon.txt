@@ -1,0 +1,12 @@
+"AddonInfo"
+{
+	"info"
+	{
+		"name" "Pointshop2 Jihad Bomb Custom Sounds"
+		"description" "Custom Sound System for Jihad Bomb TTT Integration"
+		"version" "1.0"
+		"author_name" "Leekstreak Development"
+		"author_email" ""
+		"author_url" "https://github.com/HelMirron"
+	}
+}

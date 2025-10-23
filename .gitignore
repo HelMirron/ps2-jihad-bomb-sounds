@@ -1,0 +1,30 @@
+# Garry's Mod / Lua
+*.cache
+*.db
+*.bak
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*~
+
+# Workshop files (if any)
+workshop/
+
+# Database files (local testing)
+*.sqlite
+*.db3
+
