@@ -22,7 +22,7 @@ Custom sound Pointshop2 Addon for TTT Jihad Bomb / Suicide Bomb weapons. Players
 ### Sound Item creation
 ![Item Creation](https://i.imgur.com/1lYOuQk.png)
 
-
+### Item in Inventory
 ![Jihad Sound Interface](https://i.imgur.com/e8zEoGz.png)
 
 ## Installation
