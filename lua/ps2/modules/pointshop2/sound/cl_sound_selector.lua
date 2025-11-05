@@ -140,6 +140,10 @@ end
 
 function PANEL:PlaySound( soundPath )
 	if soundPath then
+		-- Mark as preview sound BEFORE playing to prevent global broadcast
+		if Pointshop2 and Pointshop2.JihadIntegration and Pointshop2.JihadIntegration.MarkAsPreviewSound then
+			Pointshop2.JihadIntegration.MarkAsPreviewSound( soundPath )
+		end
 		surface.PlaySound( soundPath )
 	end
 end

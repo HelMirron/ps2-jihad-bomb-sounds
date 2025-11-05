@@ -5,6 +5,38 @@ Pointshop2.JihadIntegration = {}
 
 local playerSoundCache = {}
 
+-- Preview sound tracking to prevent hook interference
+local previewSounds = {}
+local PREVIEW_SOUND_DURATION = 5 -- Seconds to track preview sounds
+
+-- Mark a sound as preview-only (client-side)
+-- This prevents the EntityEmitSound hook from broadcasting it
+function Pointshop2.JihadIntegration.MarkAsPreviewSound( soundPath )
+	if not soundPath or soundPath == "" then return end
+	
+	local cleanPath = soundPath:gsub( "^sound/", "" ):lower()
+	previewSounds[cleanPath] = CurTime() + PREVIEW_SOUND_DURATION
+end
+
+-- Check if a sound is currently marked as preview
+function Pointshop2.JihadIntegration.IsPreviewSound( soundPath )
+	if not soundPath or soundPath == "" then return false end
+	
+	local cleanPath = soundPath:gsub( "^sound/", "" ):lower()
+	local expireTime = previewSounds[cleanPath]
+	
+	if expireTime and CurTime() < expireTime then
+		return true
+	end
+	
+	-- Cleanup expired entry
+	if expireTime then
+		previewSounds[cleanPath] = nil
+	end
+	
+	return false
+end
+
 -- Get player's equipped jihad sound from database
 function Pointshop2.JihadIntegration.GetPlayerJihadSound( player )
 	if not IsValid( player ) then return nil end
@@ -92,6 +124,12 @@ end
 hook.Add( "EntityEmitSound", "PS2_JihadSoundOverride", function( data )
 	local soundPath = data.SoundName or ""
 	soundPath = soundPath:lower()
+	
+	-- CRITICAL: Ignore preview sounds to prevent global broadcast
+	-- Preview sounds should only play locally for the user who clicked the button
+	if Pointshop2.JihadIntegration.IsPreviewSound( soundPath ) then
+		return false -- Don't modify preview sounds
+	end
 	
 	-- Get player from sound entity
 	local player = nil
@@ -197,6 +235,8 @@ if CLIENT then
 				
 				local fullPath = "sound/" .. cleanPath
 				if file.Exists( fullPath, "GAME" ) then
+					-- Mark as preview sound BEFORE playing to prevent global broadcast
+					Pointshop2.JihadIntegration.MarkAsPreviewSound( cleanPath )
 					surface.PlaySound( cleanPath )
 				else
 					LocalPlayer():ChatPrint( "Sound file not found: " .. cleanPath )
